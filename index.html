@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CozyWorld.Chat"
+    />
+    <meta name="theme-color" content="#f5f4ed" />
+    <title>CozyWorld.Chat</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: var(--ui-font);
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        --ui-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --display-font: Georgia, "Times New Roman", serif;
+        --ink: #203d34;
+        --muted: #64736a;
+        --green: #345a49;
+        --cream: #f5f4ed;
+      }
+
+      html:lang(zh-CN) {
+        --ui-font: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+        --display-font: "Songti SC", "Noto Serif CJK SC", "Microsoft YaHei", serif;
+      }
+
+      html:lang(zh-TW) {
+        --ui-font: "Microsoft JhengHei", "PingFang TC", "Noto Sans CJK TC", sans-serif;
+        --display-font: "Songti TC", "Noto Serif CJK TC", "Microsoft JhengHei", serif;
+      }
+
+      html:lang(ja) {
+        --ui-font: "Yu Gothic", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+        --display-font: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      }
+
+      html:lang(ko) {
+        --ui-font: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        --display-font: "Batang", "Noto Serif KR", serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(ellipse at 82% 17%, rgb(224 231 210 / 70%), transparent 31rem),
+          radial-gradient(ellipse at 10% 86%, rgb(236 225 202 / 52%), transparent 28rem),
+          var(--cream);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .page-shell {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        width: min(100% - 64px, 1200px);
+        margin: 0 auto;
+      }
+
+      .site-header {
+        display: flex;
+        min-height: 100px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 15px;
+        font-weight: 650;
+        letter-spacing: -0.035em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border: 1px solid rgb(52 90 73 / 16%);
+        border-radius: 50%;
+        background: rgb(255 255 255 / 54%);
+      }
+
+      .brand-mark svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .language-select {
+        min-width: 118px;
+        height: 42px;
+        padding: 0 36px 0 15px;
+        border: 1px solid rgb(32 61 52 / 17%);
+        border-radius: 999px;
+        color: var(--ink);
+        background-color: rgb(255 255 255 / 66%);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%23345a49' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 13px center;
+        background-size: 15px;
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .language-select:hover {
+        border-color: rgb(32 61 52 / 30%);
+        background-color: rgb(255 255 255 / 88%);
+      }
+
+      .language-select:focus-visible {
+        outline: 3px solid rgb(154 121 82 / 55%);
+        outline-offset: 3px;
+      }
+
+      .hero {
+        display: grid;
+        flex: 1;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+        align-items: center;
+        gap: clamp(48px, 8vw, 112px);
+        padding: 48px 0 84px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0 0 24px;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #a4ad7a;
+        content: "";
+      }
+
+      h1 {
+        max-width: 100%;
+        margin: 0;
+        font-family: var(--display-font);
+        font-size: clamp(46px, 6vw, 72px);
+        font-weight: 400;
+        letter-spacing: -0.045em;
+        line-height: 1.08;
+        overflow-wrap: anywhere;
+      }
+
+      h1 span {
+        color: var(--green);
+        font-style: italic;
+      }
+
+      .hero h1 span {
+        display: block;
+        font-size: inherit;
+        font-style: normal;
+        letter-spacing: inherit;
+      }
+
+      .hero h1 span:first-child {
+        color: var(--ink);
+      }
+
+      html:lang(zh-CN) h1,
+      html:lang(zh-TW) h1,
+      html:lang(ja) h1,
+      html:lang(ko) h1 {
+        letter-spacing: 0;
+      }
+
+      html:lang(zh-CN) .eyebrow,
+      html:lang(zh-TW) .eyebrow,
+      html:lang(ja) .eyebrow,
+      html:lang(ko) .eyebrow {
+        letter-spacing: 0.05em;
+      }
+
+      .intro {
+        max-width: 46rem;
+        margin: 27px 0 0;
+        color: var(--muted);
+        font-size: clamp(15px, 1.15vw, 16px);
+        line-height: 1.8;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+      }
+
+      .artwork {
+        position: relative;
+        display: grid;
+        min-height: 440px;
+        place-items: center;
+        isolation: isolate;
+      }
+
+      .artwork::before {
+        position: absolute;
+        z-index: -1;
+        width: min(100%, 430px);
+        aspect-ratio: 1;
+        border: 1px solid rgb(52 90 73 / 11%);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .artwork::after {
+        position: absolute;
+        z-index: -1;
+        width: min(76%, 326px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #e8e9d8, #e5dfc8);
+        content: "";
+      }
+
+      .note-card {
+        position: relative;
+        width: min(88%, 360px);
+        padding: clamp(22px, 2.5vw, 30px);
+        border: 1px solid rgb(255 255 255 / 80%);
+        border-radius: 18px;
+        background: rgb(255 255 255 / 72%);
+        box-shadow: 0 24px 70px rgb(52 63 45 / 10%);
+        backdrop-filter: blur(12px);
+        transform: rotate(-4deg);
+      }
+
+      .note-topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: #788274;
+        font-size: 10px;
+        font-weight: 650;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .note-sparkle {
+        color: #a38d5f;
+        font-size: 17px;
+      }
+
+      .note-card blockquote {
+        margin: 34px 0 30px;
+        font-family: var(--display-font);
+        font-size: clamp(23px, 2.5vw, 30px);
+        letter-spacing: -0.025em;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+      }
+
+      .note-signoff {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .note-signoff > span:first-child {
+        width: 22px;
+        height: 1px;
+        background: #a6aa95;
+      }
+
+      .decor {
+        position: absolute;
+        color: #78845f;
+        user-select: none;
+      }
+
+      .decor-spark {
+        top: 16%;
+        right: 12%;
+        font-size: 25px;
+      }
+
+      .decor-dot {
+        bottom: 17%;
+        left: 9%;
+        color: #b19266;
+        font-size: 19px;
+      }
+
+      .site-footer {
+        display: flex;
+        min-height: 76px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+        border-top: 1px solid rgb(32 61 52 / 11%);
+        color: #748077;
+        font-size: 11px;
+      }
+
+      .site-footer p {
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .footer-email {
+        text-decoration-color: rgb(116 128 119 / 45%);
+        text-underline-offset: 3px;
+        overflow-wrap: anywhere;
+      }
+
+      :focus-visible {
+        outline: 3px solid #9a7952;
+        outline-offset: 4px;
+      }
+
+      @media (max-width: 760px) {
+        .page-shell {
+          width: min(100% - 40px, 560px);
+        }
+
+        .site-header {
+          min-height: 78px;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 26px;
+          padding: 66px 0 50px;
+        }
+
+        h1 {
+          max-width: 520px;
+          font-size: clamp(38px, 10.5vw, 58px);
+        }
+
+        .artwork {
+          min-height: 350px;
+        }
+
+        .artwork::before {
+          width: min(82%, 340px);
+        }
+
+        .artwork::after {
+          width: min(64%, 270px);
+        }
+      }
+
+      @media (max-width: 420px) {
+        .page-shell {
+          width: calc(100% - 36px);
+        }
+
+        .brand {
+          gap: 9px;
+          font-size: 14px;
+        }
+
+        .brand-mark {
+          width: 34px;
+          height: 34px;
+        }
+
+        .hero {
+          padding-top: 52px;
+        }
+
+        h1 {
+          font-size: clamp(38px, 10.5vw, 46px);
+        }
+
+        .intro {
+          font-size: 15px;
+        }
+
+        .artwork {
+          min-height: 315px;
+        }
+
+        .site-footer {
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: center;
+          padding: 18px 0;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .page-shell {
+          width: calc(100% - 32px);
+        }
+
+        .brand {
+          gap: 7px;
+          font-size: 12px;
+        }
+
+        .brand-mark {
+          width: 30px;
+          height: 30px;
+        }
+
+        .language-select {
+          width: 106px;
+          min-width: 106px;
+          padding: 0 30px 0 11px;
+          background-position: right 10px center;
+          font-size: 12px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="CozyWorld.Chat home" data-i18n-aria="brandLabel">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 20.25c-4.1-2.38-6.15-5.3-6.15-8.76A4.17 4.17 0 0 1 12 8.58a4.17 4.17 0 0 1 6.15 2.91c0 3.46-2.05 6.38-6.15 8.76Z"
+                stroke="#345a49"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+              />
+              <path d="M12 8.5c-.2-2.26.63-3.85 2.5-4.75" stroke="#345a49" stroke-linecap="round" stroke-width="1.5" />
+            </svg>
+          </span>
+          <span>CozyWorld.Chat</span>
+        </a>
+        <select class="language-select" id="language-select" aria-label="Select language">
+          <option value="en" selected>English</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+          <option value="ru">Русский</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh">简体中文</option>
+          <option value="zh-TW">繁體中文</option>
+        </select>
+      </header>
+
+      <main class="hero">
+        <section aria-labelledby="hero-title">
+          <p class="eyebrow" data-i18n="eyebrow">Psychological counseling · Listening and support</p>
+          <h1 id="hero-title"><span data-i18n="headline">A place to set</span><span data-i18n="headlineAccent">your worries down.</span></h1>
+          <p class="intro" data-i18n="intro">This is a space to slow down, sort through your feelings, and explore your inner world together. You can begin slowly, at your own pace.</p>
+        </section>
+
+        <div class="artwork" aria-hidden="true">
+          <span class="decor decor-spark">✳</span>
+          <span class="decor decor-dot">✦</span>
+          <div class="note-card">
+            <div class="note-topline">
+              <span data-i18n="noteLabel">For you, right now</span>
+              <span class="note-sparkle">✳</span>
+            </div>
+            <blockquote data-i18n="quote">You don't need to have all the answers before you begin talking.</blockquote>
+            <div class="note-signoff"><span aria-hidden="true"></span><span data-i18n="signoff">One step at a time</span></div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="site-footer">
+        <p data-i18n="footer">May every story be met with care.</p>
+        <a class="footer-email" href="mailto:queen@cozyworld.chat">queen@cozyworld.chat</a>
+      </footer>
+    </div>
+    <script>
+      const translations = {
+        zh: {
+          lang: "zh-CN",
+          brandLabel: "CozyWorld.Chat 主页",
+          languageLabel: "选择语言",
+          eyebrow: "心理咨询 · 倾听与陪伴",
+          headline: "让心事，",
+          headlineAccent: "有处安放。",
+          intro: "这里是一个可以慢下来、整理感受，一起探索内心的空间。你可以按照自己的节奏，慢慢开始。",
+          noteLabel: "给此刻的你",
+          quote: "不必想清楚所有答案，才开始谈起。",
+          signoff: "一步一步来",
+          footer: "愿每一次倾诉，都被认真对待。",
+        },
+        "zh-TW": {
+          lang: "zh-TW",
+          brandLabel: "CozyWorld.Chat 首頁",
+          languageLabel: "選擇語言",
+          eyebrow: "心理諮詢 · 傾聽與陪伴",
+          headline: "讓心事，",
+          headlineAccent: "有處安放。",
+          intro: "這裡是一個可以慢下來、整理感受，一起探索內心的空間。你可以按照自己的步調，慢慢開始。",
+          noteLabel: "給此刻的你",
+          quote: "不必想清楚所有答案，才開始談起。",
+          signoff: "一步一步來",
+          footer: "願每一次傾訴，都被認真對待。",
+        },
+        en: {
+          lang: "en",
+          brandLabel: "CozyWorld.Chat home",
+          languageLabel: "Select language",
+          eyebrow: "Psychological counseling · Listening and support",
+          headline: "A place to set",
+          headlineAccent: "your worries down.",
+          intro: "This is a space to slow down, sort through your feelings, and explore your inner world together. You can begin slowly, at your own pace.",
+          noteLabel: "For you, right now",
+          quote: "You don't need to have all the answers before you start talking.",
+          signoff: "One step at a time",
+          footer: "May every confidence be met with care.",
+        },
+        ja: {
+          lang: "ja",
+          brandLabel: "CozyWorld.Chat ホーム",
+          languageLabel: "言語を選択",
+          eyebrow: "心理相談 · 傾聴と寄り添い",
+          headline: "心の悩みを",
+          headlineAccent: "そっと置ける場所。",
+          intro: "ここは、ゆっくり立ち止まり、気持ちを整理し、一緒に心の内を探っていく場所です。ご自身のペースで、ゆっくり始めてください。",
+          noteLabel: "今のあなたへ",
+          quote: "すべての答えが見つかっていなくても、話し始めて大丈夫です。",
+          signoff: "一歩ずつ",
+          footer: "どんなお話も、真摯に受け止めます。",
+        },
+        ko: {
+          lang: "ko",
+          brandLabel: "CozyWorld.Chat 홈",
+          languageLabel: "언어 선택",
+          eyebrow: "심리 상담 · 경청과 동행",
+          headline: "마음의 걱정을",
+          headlineAccent: "내려놓는 곳.",
+          intro: "이곳은 잠시 멈춰 감정을 정리하고, 함께 마음속을 살펴보는 공간입니다. 자신의 속도에 맞춰 천천히 시작해도 괜찮아요.",
+          noteLabel: "지금 당신에게",
+          quote: "모든 답을 알지 못해도 이야기를 시작할 수 있어요.",
+          signoff: "한 걸음씩",
+          footer: "모든 이야기를 진지하게 듣겠습니다.",
+        },
+        ru: {
+          lang: "ru",
+          brandLabel: "Главная CozyWorld.Chat",
+          languageLabel: "Выбрать язык",
+          eyebrow: "Психологическая консультация · Внимание и поддержка",
+          headline: "Место, где можно",
+          headlineAccent: "оставить тревоги.",
+          intro: "Это пространство, где можно замедлиться, разобраться в своих чувствах и вместе исследовать свой внутренний мир. Начинайте постепенно, в своём темпе.",
+          noteLabel: "Для вас сейчас",
+          quote: "Необязательно знать все ответы, прежде чем начать говорить.",
+          signoff: "Шаг за шагом",
+          footer: "К каждому откровенному рассказу отнесутся внимательно.",
+        },
+        fr: {
+          lang: "fr",
+          brandLabel: "Accueil CozyWorld.Chat",
+          languageLabel: "Choisir la langue",
+          eyebrow: "Accompagnement psychologique · Écoute et présence",
+          headline: "Un lieu pour déposer",
+          headlineAccent: "vos soucis.",
+          intro: "Cet espace permet de ralentir, d'accueillir ses émotions et d'explorer ensemble son monde intérieur. Vous pouvez commencer doucement, à votre rythme.",
+          noteLabel: "Pour vous, ici et maintenant",
+          quote: "Nul besoin d'avoir toutes les réponses avant de commencer à parler.",
+          signoff: "Un pas à la fois",
+          footer: "Chaque confidence mérite d'être accueillie avec attention.",
+        },
+        de: {
+          lang: "de",
+          brandLabel: "CozyWorld.Chat Startseite",
+          languageLabel: "Sprache auswählen",
+          eyebrow: "Psychologische Beratung · Zuhören und Begleitung",
+          headline: "Ein Ort, um Sorgen",
+          headlineAccent: "abzulegen.",
+          intro: "Hier können Sie innehalten, Ihre Gefühle ordnen und gemeinsam Ihre innere Welt erkunden. Sie können langsam und in Ihrem eigenen Tempo beginnen.",
+          noteLabel: "Für Sie, in diesem Moment",
+          quote: "Sie müssen nicht alle Antworten kennen, bevor Sie anfangen zu erzählen.",
+          signoff: "Schritt für Schritt",
+          footer: "Jedes anvertraute Wort verdient es, ernst genommen zu werden.",
+        },
+        it: {
+          lang: "it",
+          brandLabel: "Pagina iniziale CozyWorld.Chat",
+          languageLabel: "Seleziona la lingua",
+          eyebrow: "Consulenza psicologica · Ascolto e sostegno",
+          headline: "Un posto dove",
+          headlineAccent: "lasciare le preoccupazioni.",
+          intro: "Questo è uno spazio per rallentare, fare chiarezza sui propri sentimenti ed esplorare insieme il proprio mondo interiore. Puoi iniziare con calma, secondo i tuoi tempi.",
+          noteLabel: "Per te, in questo momento",
+          quote: "Non è necessario avere tutte le risposte prima di iniziare a parlarne.",
+          signoff: "Un passo alla volta",
+          footer: "Ogni confidenza merita di essere accolta con attenzione.",
+        },
+      };
+
+      const languageSelect = document.querySelector("#language-select");
+
+      const applyLanguage = (languageCode) => {
+        const language = translations[languageCode];
+        document.documentElement.lang = language.lang;
+        languageSelect.setAttribute("aria-label", language.languageLabel);
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          element.textContent = language[element.dataset.i18n];
+        });
+        document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
+          element.setAttribute("aria-label", language[element.dataset.i18nAria]);
+        });
+      };
+
+      languageSelect.addEventListener("change", () => {
+        applyLanguage(languageSelect.value);
+      });
+
+      applyLanguage(languageSelect.value);
+    </script>
+  </body>
+</html>
